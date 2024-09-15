@@ -1,0 +1,8 @@
+services:
+  geo_simulation:
+    build: .
+    volumes:
+      - .:/app
+      - ./data:/app/data
+    environment:
+      - PYTHONPATH=/app

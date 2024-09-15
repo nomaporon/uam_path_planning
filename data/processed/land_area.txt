@@ -1,0 +1,122 @@
+import auxFunctions.*
+
+poly = polygon([14.463; 11.288], [20.265; 11.003], [20.657; 18.984], [14.856; 19.269]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([21.352; 11.493], [21.352; 9.728], [22.604; 9.728], [22.604; 11.493]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([22.604; 7.655], [22.604; 6.821], [23.856; 6.821], [23.856; 7.655]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([22.604; 7.655], [23.856; 7.655], [23.856; 9.728], [22.604; 9.728]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([22.604; 11.801], [22.604; 9.728], [23.856; 9.728], [23.856; 11.801]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([22.663; 13.874], [22.663; 11.801], [23.856; 11.801], [23.856; 13.874]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([23.856; 7.655], [23.856; 5.582], [25.109; 5.582], [25.109; 7.655]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([24.438; 9.728], [24.438; 8.523], [25.109; 8.523], [25.109; 9.728]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([23.856; 9.728], [23.856; 7.655], [25.109; 7.655], [25.109; 9.728]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([23.856; 11.801], [23.856; 9.728], [25.109; 9.728], [25.109; 11.801]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([23.856; 13.874], [23.856; 11.801], [25.109; 11.801], [25.109; 13.874]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([24.042; 15.947], [24.042; 14.378], [25.109; 14.378], [25.109; 15.947]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([25.109; 7.655], [25.109; 6.715], [26.274; 6.715], [26.274; 7.655]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([25.109; 9.728], [25.109; 8.428], [26.361; 8.428], [26.361; 9.728]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([25.109; 11.801], [25.109; 9.728], [26.361; 9.728], [26.361; 11.801]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([25.109; 13.874], [25.109; 11.801], [26.361; 11.801], [26.361; 13.874]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([25.109; 15.813], [25.109; 13.874], [26.361; 13.874], [26.361; 15.813]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([26.361; 11.801], [26.361; 9.728], [27.552; 9.728], [27.552; 11.801]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([26.361; 13.874], [26.361; 11.801], [27.519; 11.801], [27.519; 13.874]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([26.361; 15.734], [26.361; 13.874], [27.614; 13.874], [27.614; 15.734]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([24.005; -32.188], [25.976; -33.324], [26.435; -32.527], [24.465; -31.391]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([25.438; -33.167], [26.006; -34.481], [26.972; -34.063], [26.404; -32.749]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([14.37; -17.675], [18.686; -17.675], [18.686; -8.348], [14.37; -8.348]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([11.646; -8.348], [18.686; -8.348], [18.686; 1.368], [11.646; 1.368]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([13.661; 11.085], [13.661; 1.368], [18.686; 1.368], [18.686; 11.085]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([18.686; -18.065], [18.686; -22.581], [25.726; -22.581], [25.726; -18.065]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([18.686; -8.348], [18.686; -18.065], [25.726; -18.065], [25.726; -8.348]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([18.686; -8.348], [25.726; -8.348], [25.726; 1.368], [18.686; 1.368]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([18.686; 1.368], [24.6; 1.368], [24.6; 9.829], [18.686; 9.829]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([24.137; 2.456], [24.137; 1.368], [25.726; 1.368], [25.726; 2.456]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([27.128; -37.5], [32.766; -37.5], [32.766; -31.26], [27.128; -31.26]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([28.445; -27.782], [28.445; -31.527], [32.766; -31.527], [32.766; -27.782]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([25.726; -27.782], [32.766; -27.782], [32.766; -18.065], [25.726; -18.065]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([27.692; -9.727], [29.377; -9.727], [29.377; -8.348], [27.692; -8.348]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([25.726; -8.348], [25.726; -18.065], [32.319; -18.065], [32.319; -8.348]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([25.726; 1.368], [25.726; -8.348], [30.399; -8.348], [30.399; 1.368]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([32.766; -27.782], [32.766; -37.5], [39.806; -37.5], [39.806; -27.782]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([32.766; -27.782], [39.806; -27.782], [39.806; -18.065], [32.766; -18.065]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([32.766; -18.065], [39.806; -18.065], [39.806; -12.897], [32.766; -12.897]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([39.806; -27.782], [39.806; -32.359], [42.789; -32.359], [42.789; -27.782]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([39.806; -27.782], [46.847; -27.782], [46.847; -18.065], [39.806; -18.065]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([39.806; -14.711], [39.806; -18.065], [45.39; -18.065], [45.39; -14.711]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([45.496; -18.065], [46.807; -18.065], [46.807; -17.423], [45.496; -17.423]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([20.386; 19.0], [20.386; 13.787], [25.669; 13.787], [25.669; 19.0]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([29.857; 6.397], [29.857; 4.691], [30.952; 4.691], [30.952; 6.397]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([26.871; 11.845], [26.871; 6.793], [30.952; 6.793], [30.952; 11.845]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([25.669; 11.845], [30.952; 11.845], [30.952; 18.999], [25.669; 18.999]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([30.952; 11.845], [30.952; 4.691], [36.236; 4.691], [36.236; 11.845]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([30.952; 18.999], [30.952; 11.845], [36.236; 11.845], [36.236; 18.999]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([40.021; -9.559], [41.519; -9.559], [41.519; -2.462], [40.021; -2.462]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([37.71; 1.904], [41.519; 1.904], [41.519; 4.691], [37.71; 4.691]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([36.236; 11.845], [36.236; 4.691], [41.519; 4.691], [41.519; 11.845]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([36.236; 18.57], [36.236; 11.845], [41.519; 11.845], [41.519; 18.57]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([41.654; -9.616], [41.688; -16.795], [46.804; -16.77], [46.77; -9.592]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([41.519; -2.462], [41.519; -9.616], [46.768; -9.616], [46.768; -2.462]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([41.519; 4.691], [41.519; -2.462], [46.735; -2.462], [46.735; 4.691]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([41.519; 11.845], [41.519; 4.691], [46.701; 4.691], [46.701; 11.845]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([41.519; 18.592], [41.519; 11.845], [46.662; 11.845], [46.662; 18.592]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([37.06; -8.148], [39.172; -10.819], [40.201; -10.006], [38.088; -7.334]);
+map.add_shape_to_region(Land, poly)
+poly = polygon([42.991; -26.726], [44.773; -28.721], [46.019; -27.608], [44.237; -25.613]);
+map.add_shape_to_region(Land, poly)

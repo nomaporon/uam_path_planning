@@ -1,0 +1,60 @@
+import auxFunctions.*
+
+poly = polygon([28.836; -32.708], [29.607; -36.124], [32.53; -35.464], [31.759; -32.048]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([29.185; -27.687], [29.35; -29.043], [32.001; -28.719], [31.835; -27.362]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([30.45; -24.494], [32.097; -24.809], [32.293; -23.781], [30.646; -23.466]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([30.179; -22.099], [31.872; -22.221], [32.013; -20.255], [30.32; -20.134]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([31.826; -33.217], [32.92; -33.773], [34.082; -31.487], [32.989; -30.931]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([32.221; -29.916], [33.536; -29.916], [33.536; -28.183], [32.221; -28.183]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([32.871; -26.783], [32.871; -28.183], [33.536; -28.183], [33.536; -26.783]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([32.313; -25.511], [32.313; -26.28], [33.536; -26.28], [33.536; -25.511]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([31.875; -25.511], [33.536; -25.511], [33.536; -22.838], [31.875; -22.838]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([31.875; -20.349], [31.875; -22.838], [33.536; -22.838], [33.536; -20.349]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([33.536; -30.856], [33.536; -33.302], [35.197; -33.302], [35.197; -30.856]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([33.536; -28.183], [33.536; -30.856], [35.197; -30.856], [35.197; -28.183]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([33.536; -25.511], [33.536; -28.183], [35.197; -28.183], [35.197; -25.511]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([33.536; -22.838], [33.536; -25.511], [35.197; -25.511], [35.197; -22.838]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([33.536; -22.106], [33.536; -22.838], [34.618; -22.838], [34.618; -22.106]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([35.197; -28.183], [35.197; -30.856], [36.858; -30.856], [36.858; -28.183]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([35.197; -28.183], [36.858; -28.183], [36.858; -25.511], [35.197; -25.511]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([34.658; -24.157], [36.628; -24.963], [37.229; -23.493], [35.259; -22.687]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([36.858; -28.183], [36.858; -30.578], [37.654; -30.578], [37.654; -28.183]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([36.327; -27.292], [37.673; -28.391], [38.569; -27.293], [37.222; -26.195]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([24.856; -18.992], [25.294; -20.24], [27.054; -19.623], [26.616; -18.375]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([31.691; -19.726], [35.922; -20.728], [36.67; -17.565], [32.439; -16.563]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([26.334; 16.705], [27.688; 13.096], [30.145; 14.018], [28.791; 17.627]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([14.398; 21.212], [20.922; 13.157], [27.408; 18.41], [20.884; 26.465]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([40.009; -26.859], [42.78; -28.265], [44.413; -25.048], [41.642; -23.642]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([34.034; -20.664], [35.549; -21.925], [36.207; -21.134], [34.693; -19.873]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([43.479; -19.521], [44.456; -20.493], [46.884; -18.051], [45.907; -17.079]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([37.098; -8.131], [41.568; -14.026], [46.327; -10.417], [41.858; -4.522]);
+map.add_shape_to_region(Population, poly)
+poly = polygon([32.392; 7.207], [33.374; 5.991], [35.54; 7.741], [34.558; 8.957]);
+map.add_shape_to_region(Population, poly)

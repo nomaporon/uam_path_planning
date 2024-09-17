@@ -70,7 +70,7 @@ poly = polygon([27.692; -9.727], [29.377; -9.727], [29.377; -8.348], [27.692; -8
 map.add_shape_to_region(Land, poly)
 poly = polygon([25.726; -8.348], [25.726; -18.065], [32.319; -18.065], [32.319; -8.348]);
 map.add_shape_to_region(Land, poly)
-poly = polygon([25.726; 1.368], [25.726; -8.348], [30.399; -8.348], [30.399; 1.368]);
+poly = polygon([25.726; -8.348], [30.399; -8.348], [30.399; 1.368], [25.726; 1.368]);
 map.add_shape_to_region(Land, poly)
 poly = polygon([32.766; -27.782], [32.766; -37.5], [39.806; -37.5], [39.806; -27.782]);
 map.add_shape_to_region(Land, poly)

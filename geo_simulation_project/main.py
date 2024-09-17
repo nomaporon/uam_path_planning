@@ -24,6 +24,7 @@ class Main:
         # # # 処理後のポリゴンデータをシミュレーション用に保存
         self.data_manager.save_polygons(processed_polygons, 'Population', 'data/processed/populated_area.txt')
         # # # プロットの表示
+        # self.visualizer.plot_polygons(polygons)
         # self.visualizer.plot_polygons(processed_polygons)
         plot_polygons = [polygons, processed_polygons]
         self.visualizer.set_plot_limits(20000, 50000, -40000, -10000)
@@ -39,11 +40,13 @@ class Main:
         # # # 処理後のポリゴンデータをシミュレーション用に保存
         self.data_manager.save_polygons(processed_polygons, 'Land', 'data/processed/land_area.txt')
         # # # プロットの表示
-        self.visualizer.plot_polygons(polygons)
+        plot_polygons = [polygons, processed_polygons]
+        # self.visualizer.plot_polygons(polygons)
+        self.visualizer.plot_multiple_sets_of_polygons(plot_polygons, colors=['blue', 'red'])
 
     # # # 選択したポリゴンデータを処理
-    # # # 複数エリアを選択したい場合は、テキストファイルの中身を消さずに再度実行する。リセットする場合はテキストファイルの中身を消す
-    # # # 選択を終了するには、Macの場合はoptionキーを押しながらクリック、Windowsの場合はctrlキーを押しながらクリック
+    # # # 複数エリアを選択したい場合は、/data/raw/selected_polygons.txtの中身を消さずに再度実行する。リセットする場合はテキストファイルの中身を消す
+    # # # 選択を終了するには、Enterキーを押す。右クリックで最後に追加した座標を削除する。
     def process_select_polygons(self):
         # # # 陸地データのプロットをもとにポリゴンデータを選択
         land_polygons = self.data_manager.load_dem_polygons_from_geotiff('data/raw/nagasaki_geotiff/merge_test.tif', 0)
@@ -61,11 +64,13 @@ class Main:
         # # # 人口密集地データの取得
         populated_polygons = self.data_manager.load_polygons_from_shapefile('data/raw/populated_area/populated_area.shp')
         processed_populated_polygons = self.processor.process_polygons(populated_polygons)
+        land_polygons = self.data_manager.load_dem_polygons_from_geotiff('data/raw/nagasaki_geotiff/merge_test.tif', 0)
+        processed_land_polygons = self.processor.process_polygons(land_polygons)
         # # # 選択したポリゴンデータの取得
         with open('data/raw/selected_polygons.txt', 'r') as f:
             get_polygons = [wkt.loads(line.strip()) for line in f]
 
-        self.visualizer.plot_multiple_sets_of_polygons([processed_populated_polygons, get_polygons], colors=['blue', 'red'])
+        self.visualizer.plot_multiple_sets_of_polygons([processed_populated_polygons, processed_land_polygons, get_polygons], colors=['red', 'blue', 'green'])
 
 if __name__ == "__main__":
     main = Main()

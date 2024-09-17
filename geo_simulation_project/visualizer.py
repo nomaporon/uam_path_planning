@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import patches
 from geo_simulation_project.utils import generate_random_colors
+from geopandas import GeoSeries
 
 class Visualizer:
     def __init__(self):
@@ -15,9 +16,15 @@ class Visualizer:
         plt.ylabel('Y', fontsize=10)
 
     def add_polygon(self, polygon, color, alpha):
-        if polygon.exterior is not None and len(polygon.exterior.coords) > 0:
+        if isinstance(polygon, GeoSeries):
+            for geom in polygon:
+                if geom.geom_type == 'Polygon':
+                    xy = np.array(geom.exterior.coords.xy).T
+                    poly = patches.Polygon(xy, fc=color, ec='black', alpha=alpha)
+                    self.ax.add_patch(poly)
+        elif hasattr(polygon, 'exterior') and polygon.exterior is not None:
             xy = np.array(polygon.exterior.coords.xy).T
-            poly = patches.Polygon(xy, fc=color, ec=color, alpha=alpha)
+            poly = patches.Polygon(xy, fc=color, ec='black', alpha=alpha)
             self.ax.add_patch(poly)
 
     def plot_polygons(self, polygons, color='blue', alpha=0.35):
@@ -41,7 +48,6 @@ class Visualizer:
         plt.show()
 
 def test_visualizer():
-    from shapely.geometry import Polygon
     from geo_simulation_project.data_manager import DataManager
     from geo_simulation_project.data_processor import DataProcessor
 

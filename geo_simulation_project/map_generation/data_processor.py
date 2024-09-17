@@ -3,7 +3,7 @@ from shapely.geometry import Polygon, MultiPolygon, LineString, box
 from shapely.ops import unary_union
 import cv2
 import matplotlib.pyplot as plt
-from geo_simulation_project.visualizer import Visualizer
+from map_generation.visualizer import Visualizer
 
 class DataProcessor:
     def __init__(self, min_area=750000, large_area=32000000, divisions=5, min_approx_polygon_area=780000):
@@ -92,14 +92,14 @@ class DataProcessor:
         return get_polygon
 
 def test_data_processor():
-    from geo_simulation_project.data_manager import DataManager
+    from map_generation.data_manager import DataManager
     data_manager = DataManager()
     processor = DataProcessor()
 
-    polygons = data_manager.load_dem_polygons_from_geotiff('data/raw/nagasaki_geotiff/merge_test.tif', 0)
+    polygons = data_manager.load_dem_polygons_from_geotiff('../data/raw/nagasaki_geotiff/merge_test.tif', 0)
     get_polygon = processor.select_polygons(polygons)
     # # # ポリゴンの座標をテキストファイルに保存
-    with open('data/raw/selected_polygons.txt', 'w') as f:
+    with open('../data/raw/selected_polygons.txt', 'w') as f:
         f.write(str(get_polygon) + "\n")
 
 if __name__ == "__main__":

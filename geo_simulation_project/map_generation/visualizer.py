@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import patches
-from geo_simulation_project.utils import generate_random_colors
+from map_generation.utils import generate_random_colors
 from geopandas import GeoSeries
 
 class Visualizer:
@@ -48,14 +48,14 @@ class Visualizer:
         plt.show()
 
 def test_visualizer():
-    from geo_simulation_project.data_manager import DataManager
-    from geo_simulation_project.data_processor import DataProcessor
+    from map_generation.data_manager import DataManager
+    from map_generation.data_processor import DataProcessor
 
     data_manager = DataManager()
     processor = DataProcessor()
     visualizer = Visualizer()
 
-    polygons = data_manager.load_polygons_from_shapefile('data/raw/populated_area/populated_area.shp')
+    polygons = data_manager.load_polygons_from_shapefile('../data/raw/populated_area/populated_area.shp')
     processed_polygons = processor.process_polygons(polygons)
 
     # # # plot_polygonsメソッドをテスト

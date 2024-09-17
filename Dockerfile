@@ -77,3 +77,5 @@ ENV PYTHONPATH=/app
 # SSHサーバーを起動
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
+
+RUN echo "cd /app/geo_simulation_project" >> /root/.bashrc

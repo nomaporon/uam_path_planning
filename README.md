@@ -9,7 +9,7 @@ windowsやMac OSなどPCのOSに応じてダウンロードする．
 ### git lfsをダウンロード(容量の大きいtifファイルをダウンロードする用)
 [git lfsダウンロードページ](https://git-lfs.com/)
 ### このプロジェクトをクローン
-`git clone https://github.com/nomaporon/uam_path_planning.git`
+```git clone https://github.com/nomaporon/uam_path_planning.git```
 ## 3.コンテナに x-org-server と ssh クライアントを入れる
   macの場合はxquartzをインストール
 ## 4.Dockerコンテナを立ち上げる

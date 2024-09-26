@@ -57,7 +57,7 @@ class Main:
         # # # 選択したポリゴンデータをシミュレーション用に保存
         with open('../data/raw/selected_polygons.txt', 'r') as f:
             get_polygons = [wkt.loads(line.strip()) for line in f]
-        self.data_manager.save_polygons(get_polygons, 'Land', 'data/processed/selected_area.txt')
+        self.data_manager.save_polygons(get_polygons, 'Land', '../data/processed/selected_area.txt')
 
     # # # マップの可視化
     def visualize_map(self):

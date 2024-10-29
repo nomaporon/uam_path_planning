@@ -15,8 +15,42 @@ class Solver:
 
     def solve(self, x_init):
         self.x_init = x_init
-    
-        # Define optimization variables
+        x0, xf = self.problem.map.x_start, self.problem.map.x_goal
+        route_endpoints = np.array([x0, xf]).flatten()
+
+        try:
+            solver = og.tcp.OptimizerTcpManager('python_build/map_v1_n20')
+        except:
+            print("Build New Solver")
+            self.build_solver()
+            solver = og.tcp.OptimizerTcpManager('python_build/map_v1_n20')
+        
+        try:
+            solver.start()
+            server_response = solver.call(route_endpoints, initial_guess=x_init)
+        except Exception as e:
+            print("An error occurred:", str(e))
+        finally:
+            solver.kill()
+
+        if server_response.is_ok():
+            solution = server_response.get()
+            self.x_sol = solution.solution
+            out = {
+                'x': self.x_sol,
+                'N': self.problem.N,
+                'x0': x_init,
+                'time': solution.solve_time_ms / 1000,
+                'fval': solution.cost,
+                'length': self.problem.length_of(self.x_sol),
+                'exit_status': solution.exit_status
+            }
+            return out
+        else:
+            print("Solver error code:", server_response.get().code)
+            print("Error message:", self.get_error_code_explanation(server_response.get().code))
+
+    def build_solver(self):
         N = self.problem.N
         z = cs.SX.sym('z', 2*N) # z = [x_1, y_1, x_2, y_2, ...x_N, y_N] (2N × 1)
         end_points = cs.SX.sym('end_points', 4) # end_points = [x0_0, x0_1, xf_0, xf_1]
@@ -24,87 +58,36 @@ class Solver:
         z_goal = end_points[2:]
         z_ = cs.vertcat(z_start, z, z_goal)
     
-        # Define cost function
+        # Define cost function. See problem.py for details
+        # cost = distance + penalty from each region
         cost = self.problem.get_cost(z_) 
     
-        # Define constraints
+        # Define constraints. See problem.py for details
+        #       |Δx_i|/r_max ≤ |Δx_{i+1}| ≤ |Δx_i|*r_max
+        #       angle(Δx_i,Δx_{i+1}) ≤ α_max
+        #       [h(x)]_+ = 0
         g = self.problem.get_nonlincon(z_)
-
-        # x_y_min = [25, -28] * N
-        # x_y_max = [36, 10] * N
-        # bounds = og.constraints.Rectangle(x_y_min, x_y_max)
     
         # Create OpEn problem
         problem = og.builder.Problem(z, end_points, cost)\
             .with_penalty_constraints(g)\
             # .with_aug_lagrangian_constraints(g)\
-            # .with_constraints(bounds)
     
         # Configure solver
         build_config = og.config.BuildConfiguration()\
             .with_build_directory("python_build")\
             .with_tcp_interface_config()
         meta = og.config.OptimizerMeta()\
-            .with_optimizer_name("path_generation")
-        
-        # solver_config = og.config.SolverConfiguration()\
-        #     .with_tolerance(1e-4)\
-        #     .with_initial_tolerance(1e-3)\
-        #     .with_max_inner_iterations(100000)
+            .with_optimizer_name("map_v1_n20")
         
         solver_config = og.config.SolverConfiguration()\
             .with_tolerance(1e-4)\
             .with_initial_tolerance(1e-3)\
-            .with_max_inner_iterations(1e7)\
-            # .with_initial_penalty(10.0)\
-            # .with_penalty_weight_update_factor(5.0)\
-            # .with_lbfgs_memory(15)\
-            # .with_preconditioning(True)\
-            # .with_delta_tolerance(1e-4)
-
-            
+            .with_max_inner_iterations(1000)
         
         # Build optimizer
         builder = og.builder.OpEnOptimizerBuilder(problem, meta, build_config, solver_config)
         builder.build()
-    
-        # Create solver
-        solver = og.tcp.OptimizerTcpManager('python_build/path_generation')
-        solver.start()
-    
-        try:
-            # Solve the problem
-            x0 = np.array(self.problem.map.x_start)
-            xf = np.array(self.problem.map.x_goal)
-            route_endpoints = np.array([x0, xf]).flatten()
-            server_response = solver.call(route_endpoints, initial_guess=x_init)
-            if server_response.is_ok():
-                # Process results
-                solution = server_response.get()
-                self.x_sol = solution.solution
-
-                out = {
-                    'x': self.x_sol,
-                    'N': N,
-                    'x0': x_init,
-                    'time': solution.solve_time_ms / 1000,  # Convert to seconds
-                    'fval': solution.cost,
-                    'length': self.problem.length_of(self.x_sol),
-                    'exit_status': solution.exit_status
-                }
-
-                # if self.verbose:
-                #     self.print_info(out)
-
-                return out
-            else:
-                print("Solver error code:", server_response.get().code)
-                print("Error message:", self.get_error_code_explanation(server_response.get().code))
-                # print("Error message:", server_response.get().message)
-        except Exception as e:
-            print("An error occurred:", str(e))
-        finally:
-            solver.kill()
 
     # def print_info(self, out):
     #     print("\n---------------------------------------------------------------------")

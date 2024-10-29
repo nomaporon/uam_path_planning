@@ -69,7 +69,7 @@ class RegionMap(Map):
         
         # names = self.region_names() # ['HistCenter', 'Population', 'Land']
         for region in self.regions.values():
-            print(region['shapes'])
+            # print(region['shapes'])
             for obs in region['shapes']:
                 xlim = obs.xlim
                 ylim = obs.ylim
@@ -86,10 +86,10 @@ class RegionMap(Map):
             ax = plt.gca()
         # super().plot(*args, ax=ax, **kwargs)
         for name, region in self.regions.items():
-            print(region['shapes'])
+            # print(region['shapes'])
             color = region['color']
             for shape in region['shapes']:
-                shape.plot(color, 'filled', ax=ax)
+                shape.plot(color=color)
         legend_elements = []
         for name, region in self.regions.items():
             color = region['color']
@@ -97,3 +97,33 @@ class RegionMap(Map):
                                               markerfacecolor=color, markersize=10))
         ax.legend(handles=legend_elements)
         ax.autoscale_view()
+
+if __name__ == '__main__':
+    from polygon import polygon
+    map = RegionMap()
+    map.x_start = np.array([15, -30])
+    map.x_goal = np.array([40, -5])
+    points = [
+        [16.088709677419356, 11.006493506493506],
+        [12.21774193548387, -7.8246753246753284],
+        [28.245967741935484, -27.629870129870138],
+        [33.20564516129032, -16.83441558441559],
+        [28.48790322580645, 1.9967532467532438]
+    ]
+
+    points2 = [
+        [25.04032258064516, -24.464285714285722],
+        [33.931451612903224, -38.26298701298702],
+        [48.14516129032258, -22.43506493506494],
+        [34.596774193548384, -12.207792207792211]
+    ]
+    obs1 = polygon(*points)
+    obs2 = polygon(*points2)
+    obstacles = [obs1, obs2]
+    map.add_obstacles(*obstacles)
+    map.new_region('Region1', 'r')
+    map.add_shape_to_region('Region1', obs1)
+    map.new_region('Region2', 'b')
+    map.add_shape_to_region('Region2', obs2)
+    map.plot()
+    plt.show()

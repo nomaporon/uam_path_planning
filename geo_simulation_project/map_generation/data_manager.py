@@ -29,26 +29,52 @@ class DataManager:
     
     # ポリゴンデータを保存
     # MATLABでそのまま読み込める形式で保存
-    def save_polygons(self, polygons, polygon_type ,output_file):
+    # def save_polygons(self, polygons, polygon_type ,output_file):
+    #     with open(output_file, 'w') as f:
+    #         f.write("import auxFunctions.*\n\n")
+    #         if isinstance(polygons, list):
+    #             for polygon in polygons:
+    #                 coords = list(polygon.exterior.coords)
+    #                 if coords[0] == coords[-1]:
+    #                     coords = coords[:-1]
+    #                 f.write("poly = polygon(")
+    #                 for coord in coords:
+    #                     f.write("[" + str(coord[0]/1000) + "; " + str(coord[1]/1000) + "], ")
+    #                 f.seek(f.tell() - 2, 0)
+    #                 f.write(");\n" + f'map.add_shape_to_region({polygon_type}, poly)\n')
+    #         else:
+    #             coords = polygons.exterior.coords
+    #             if coords[0] == coords[-1]:
+    #                 coords = coords[:-1]
+    #             f.write("poly = polygon(")
+    #             for coord in coords:
+    #                 f.write("[" + str(coord[0]/1000) + "; " + str(coord[1]/1000) + "], ")
+    #             f.seek(f.tell() - 2, 0)
+    #             f.write(");\n" + f'map.add_shape_to_region({polygon_type}, poly)\n')
+
+    def save_polygons(self, polygons ,output_file):
         with open(output_file, 'w') as f:
-            f.write("import auxFunctions.*\n\n")
             if isinstance(polygons, list):
-                for polygon in polygons:
-                    coords = list(polygon.exterior.coords)
+                f.write("vertices = [")
+                for i in range(len(polygons)):
+                    coords = list(polygons[i].exterior.coords)
                     if coords[0] == coords[-1]:
                         coords = coords[:-1]
-                    f.write("poly = polygon(")
+                    f.write("polygon(")
                     for coord in coords:
-                        f.write("[" + str(coord[0]/1000) + "; " + str(coord[1]/1000) + "], ")
+                        f.write("[" + str(coord[0]/1000) + ", " + str(coord[1]/1000) + "], ")
                     f.seek(f.tell() - 2, 0)
-                    f.write(");\n" + f'map.add_shape_to_region({polygon_type}, poly)\n')
+                    if i == len(polygons) - 1:
+                        f.write(")\n")
+                    else:
+                        f.write("),\n")
+                f.write("]")
             else:
                 coords = polygons.exterior.coords
                 if coords[0] == coords[-1]:
                     coords = coords[:-1]
-                f.write("poly = polygon(")
+                f.write("[")
                 for coord in coords:
-                    f.write("[" + str(coord[0]/1000) + "; " + str(coord[1]/1000) + "], ")
+                    f.write("[" + str(coord[0]/1000) + ", " + str(coord[1]/1000) + "], ")
                 f.seek(f.tell() - 2, 0)
-                f.write(");\n" + f'map.add_shape_to_region({polygon_type}, poly)\n')
-
+                f.write("]\n")

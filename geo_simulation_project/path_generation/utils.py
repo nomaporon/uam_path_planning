@@ -1,3 +1,5 @@
+from polygon import polygon
+
 def color2RGB(color):
     if not isinstance(color, str):
         return color
@@ -23,3 +25,11 @@ def color2RGB(color):
     }
     
     return color_dict.get(color, None)
+
+def get_var_from_file(filename, varname):
+    with open(filename, 'r') as file:
+        content = file.read()
+
+    local_vars = {}
+    exec(content, globals(), local_vars)
+    return local_vars[varname]

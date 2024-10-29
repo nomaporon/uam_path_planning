@@ -12,8 +12,8 @@ class Main:
     def main(self):
         # self.process_population() # 人口密集地データの処理
         # self.process_land() # 標高データの処理
-        # self.process_select_polygons() # 選択したポリゴンデータの処理
-        self.visualize_map() # マップの可視化
+        self.process_select_polygons() # 選択したポリゴンデータの処理
+        # self.visualize_map() # マップの可視化
 
     # # # 人口密集地データの処理
     def process_population(self):
@@ -22,7 +22,7 @@ class Main:
         # # # ポリゴンデータの近似処理
         processed_polygons = self.processor.process_polygons(polygons)
         # # # 処理後のポリゴンデータをシミュレーション用に保存
-        self.data_manager.save_polygons(processed_polygons, 'Population', 'data/processed/populated_area.txt')
+        self.data_manager.save_polygons(processed_polygons, '../data/processed/populated_area.txt')
         # # # プロットの表示
         # self.visualizer.plot_polygons(polygons)
         # self.visualizer.plot_polygons(processed_polygons)
@@ -38,7 +38,7 @@ class Main:
         # # # ポリゴンデータの近似処理
         processed_polygons = self.processor.process_polygons(polygons)
         # # # 処理後のポリゴンデータをシミュレーション用に保存
-        self.data_manager.save_polygons(processed_polygons, 'Land', 'data/processed/land_area.txt')
+        self.data_manager.save_polygons(processed_polygons, 'data/processed/land_area.txt')
         # # # プロットの表示
         plot_polygons = [polygons, processed_polygons]
         # self.visualizer.plot_polygons(polygons)
@@ -57,7 +57,7 @@ class Main:
         # # # 選択したポリゴンデータをシミュレーション用に保存
         with open('../data/raw/selected_polygons.txt', 'r') as f:
             get_polygons = [wkt.loads(line.strip()) for line in f]
-        self.data_manager.save_polygons(get_polygons, 'Land', '../data/processed/selected_area.txt')
+        self.data_manager.save_polygons(get_polygons, '../data/processed/selected_area.txt')
 
     # # # マップの可視化
     def visualize_map(self):

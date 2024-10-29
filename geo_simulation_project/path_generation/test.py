@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Problem parameters
-N = 40  # Number of waypoints
+N = 4  # Number of waypoints
 dim = 2  # 2D problem
 obstacle_center_point = np.array([31.034679, -9.07367])
 r_max = 1.1  # Maximum ratio between consecutive segments
@@ -19,7 +19,7 @@ zN = np.array([26.478673, 9.564082])  # End point
 # Define the optimization variables
 z = cs.SX.sym('z', N * dim)
 # print(z)
-z_end_points = cs.SX.sym('z_end_points', 4)
+z_end_points = cs.SX.sym('z_end_points', 2 * dim)
 
 z_start = z_end_points[:2]
 z_goal = z_end_points[2:]
@@ -61,6 +61,7 @@ def constraint_function(z):
         
         cos_theta = cs.dot(dz1, dz2) / (cs.norm_2(dz1) * cs.norm_2(dz2))
         constraints.append(cs.fmax(0.0, cs.cos(theta_max) - cos_theta))
+    print(constraints)
 
     return cs.vertcat(*constraints)
 
@@ -100,7 +101,7 @@ build_config = og.config.BuildConfiguration()  \
     .with_build_directory("python_build")      \
     .with_tcp_interface_config()
 meta = og.config.OptimizerMeta()\
-    .with_optimizer_name("flying_car_optimizer")
+    .with_optimizer_name("test_path_generation")
 solver_config = og.config.SolverConfiguration()\
     .with_tolerance(1e-4)\
     .with_initial_tolerance(1e-4)\
@@ -111,7 +112,7 @@ builder = og.builder.OpEnOptimizerBuilder(problem, meta, build_config, solver_co
 builder.build()
 
 # Use the solver
-solver = og.tcp.OptimizerTcpManager('python_build/flying_car_optimizer')
+solver = og.tcp.OptimizerTcpManager('python_build/test_path_generation')
 solver.start()
 
 # Generate initial trajectory
@@ -155,7 +156,11 @@ try:
         plt.gca().set_aspect('equal', adjustable='box') 
         plt.show()
     else:
-        print("Error message:", server_response.get().message)
+        solver_error = server_response.get()
+        error_code = solver_error.code
+        error_msg = solver_error.message
+        print("Solver error code:", error_code)
+        print("Error message:", error_msg)
 except Exception as e:
     print("An error occurred:", str(e))
 

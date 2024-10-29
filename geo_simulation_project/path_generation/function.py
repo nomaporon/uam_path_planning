@@ -3,12 +3,22 @@ from typing import Callable, Union, Optional
 
 class Function:
     def __init__(self, f, grad, hess, n=2):
+        self._n = n
+        self._is_constant = False
+        self._is_linear = False
+        self._is_quadratic = True
+        self._is_convex = True
+        self._call = None
+        self._grad = None
+        self._hess = None
+
         self.f = f
-        self.grad = grad
-        self.hess = hess
-        self.n = n
-        self._is_quadratic = True  # プライベート変数として定義
-        self._is_convex = True     # プライベート変数として定義
+        
+        if grad is not None:
+            self.grad = grad
+            
+        if hess is not None:
+            self.hess = hess
 
     @property
     def n(self):

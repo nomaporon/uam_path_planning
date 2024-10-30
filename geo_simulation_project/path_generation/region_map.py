@@ -9,6 +9,7 @@ class RegionMap(Map):
     def __init__(self):
         super().__init__()
         self.regions: Dict[str, Dict[str, Any]] = {}
+        self.map_version = 'v1'
 
     def add_obstacle(self, obstacle: QuadraticObstacle):
         """Add one obstacle (infeasible region) to the map."""

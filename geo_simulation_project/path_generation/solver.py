@@ -6,135 +6,99 @@ from problem import Problem
 import matplotlib.pyplot as plt
 
 class Solver:
-    def __init__(self, problem: Problem):
+    def __init__(self, problem: Problem, opts: Dict):
         assert isinstance(problem, Problem)
         self.problem = problem
         self.x_sol = None
         self.x_init = None
+        self.opts = opts
         self.verbose = True
+        self.optimizer_name = None
+        self.update_solver = False
 
-    def solve(self, x_init):
+    def solve(self, x_init, params):
         self.x_init = x_init
-    
-        # Define optimization variables
-        N = self.problem.N
-        z = cs.SX.sym('z', 2*N) # z = [x_1, y_1, x_2, y_2, ...x_N, y_N] (2N × 1)
-        end_points = cs.SX.sym('end_points', 4) # end_points = [x0_0, x0_1, xf_0, xf_1]
-        z_start = end_points[:2]
-        z_goal = end_points[2:]
-        z_ = cs.vertcat(z_start, z, z_goal)
-    
-        # Define cost function
-        cost = self.problem.get_cost(z_) 
-    
-        # Define constraints
-        g = self.problem.get_nonlincon(z_)
 
-        # x_y_min = [25, -28] * N
-        # x_y_max = [36, 10] * N
-        # bounds = og.constraints.Rectangle(x_y_min, x_y_max)
-    
-        # Create OpEn problem
-        problem = og.builder.Problem(z, end_points, cost)\
-            .with_penalty_constraints(g)\
-            # .with_aug_lagrangian_constraints(g)\
-            # .with_constraints(bounds)
-    
-        # Configure solver
-        build_config = og.config.BuildConfiguration()\
-            .with_build_directory("python_build")\
-            .with_tcp_interface_config()
-        meta = og.config.OptimizerMeta()\
-            .with_optimizer_name("path_generation")
-        
-        # solver_config = og.config.SolverConfiguration()\
-        #     .with_tolerance(1e-4)\
-        #     .with_initial_tolerance(1e-3)\
-        #     .with_max_inner_iterations(100000)
-        
-        solver_config = og.config.SolverConfiguration()\
-            .with_tolerance(1e-4)\
-            .with_initial_tolerance(1e-3)\
-            .with_max_inner_iterations(1e7)\
-            # .with_initial_penalty(10.0)\
-            # .with_penalty_weight_update_factor(5.0)\
-            # .with_lbfgs_memory(15)\
-            # .with_preconditioning(True)\
-            # .with_delta_tolerance(1e-4)
-
-            
-        
-        # Build optimizer
-        builder = og.builder.OpEnOptimizerBuilder(problem, meta, build_config, solver_config)
-        builder.build()
-    
-        # Create solver
-        solver = og.tcp.OptimizerTcpManager('python_build/path_generation')
-        solver.start()
-    
         try:
-            # Solve the problem
-            x0 = np.array(self.problem.map.x_start)
-            xf = np.array(self.problem.map.x_goal)
-            route_endpoints = np.array([x0, xf]).flatten()
-            server_response = solver.call(route_endpoints, initial_guess=x_init)
-            if server_response.is_ok():
-                # Process results
-                solution = server_response.get()
-                self.x_sol = solution.solution
-
-                out = {
-                    'x': self.x_sol,
-                    'N': N,
-                    'x0': x_init,
-                    'time': solution.solve_time_ms / 1000,  # Convert to seconds
-                    'fval': solution.cost,
-                    'length': self.problem.length_of(self.x_sol),
-                    'exit_status': solution.exit_status
-                }
-
-                # if self.verbose:
-                #     self.print_info(out)
-
-                return out
-            else:
-                print("Solver error code:", server_response.get().code)
-                print("Error message:", self.get_error_code_explanation(server_response.get().code))
-                # print("Error message:", server_response.get().message)
+            if self.update_solver:
+                print("Build New Solver")
+                self.build_solver()
+            solver = og.tcp.OptimizerTcpManager('python_build/' + self.optimizer_name)
+        except:
+            print("Build New Solver")
+            self.build_solver()
+            solver = og.tcp.OptimizerTcpManager('python_build/' + self.optimizer_name)
+        
+        try:
+            solver.start()
+            server_response = solver.call(params, initial_guess=x_init)
         except Exception as e:
             print("An error occurred:", str(e))
         finally:
             solver.kill()
 
-    # def print_info(self, out):
-    #     print("\n---------------------------------------------------------------------")
-    #     print(f"\nProblem (N = {out['N']})")
-    #     opts = self.problem.options
-    #     ineq, eq = self.problem.feasibility_of(out['x0'])
-    #     pow_len = '²' if opts['length_smooth'] else ''
-    #     pow_pen = '²' if opts['penalty_smooth'] else ''
-    #     print(f"\t min_x Σ_i{{|Δx_i|{pow_len} + Σ_{{reg}}p_{{reg}}(x_i){pow_pen}}}")
-    #     rel_obs = '=' if opts['equality'] else '≤'
-    #     pow_obs = '²' if opts['obstacle_smooth'] else ''
-    #     print(f"\t  s.t. [p_{{obs}}(x)]_+{pow_obs} {rel_obs} 0")
-    #     print(f"\t       angle(Δx_{{i-1}},Δx_i) ≤ {float(opts['maxalpha']) / np.pi * 180:.1f}°")
-    #     pow_r = '²' if opts['maxratio_smooth'] else ''
-    #     print(f"\t       |Δx_{{i±1}}|{pow_r} ≤ {float(opts['maxratio']):.1f}{pow_r} |Δx_i|{pow_r}")
-    #     f = self.problem.get_cost()
-    #     len_init = float(self.problem.length_of(out['x0']))
-    #     f_value = float(f(out['x0']))
-    #     ineq_value = float(ineq)
-    #     eq_value = float(eq)
-    #     print(f"\t   x0: len {len_init:.3f} | fval {f_value:.3f} | ineq: {ineq_value:.1e} | eq: {eq_value:.1e}")
+        if server_response.is_ok():
+            solution = server_response.get()
+            self.x_sol = solution.solution
+            out = {
+                'x': self.x_sol,
+                'N': self.problem.N,
+                'x0': x_init,
+                'time': solution.solve_time_ms / 1000,
+                'fval': solution.cost,
+                'length': self.problem.length_of(self.x_sol),
+                'exit_status': solution.exit_status
+            }
+            return out
+        else:
+            print("Solver error code:", server_response.get().code)
+            print("Error message:", self.get_error_code_explanation(server_response.get().code))
 
-    #     print("\nSolver")
-    #     sol_length = float(out['length'])
-    #     sol_fval = float(out['fval'])
-    #     sol_ineq = float(out['ineq'])
-    #     sol_eq = float(out['eq'])
-    #     print(f"\t sol.: len {sol_length:.3f} | fval {sol_fval:.3f} | ineq: {sol_ineq:.1e} | eq: {sol_eq:.1e}")
-    #     print(f"\t exit status: {out['exit_status']}")
-    #     print(f"\t time: {float(out['time']):.2f} s.")
+    def build_solver(self):
+        N = self.problem.N
+        z = cs.SX.sym('z', 2*N) # z = [x_1, y_1, x_2, y_2, ...x_N, y_N] (2N × 1)
+        ### p = [x_start(2×1), x_goal(2×1), max_ratio, max_alpha, enlargement, weights(n×1)]
+        regions = [key for key in self.problem.map.regions]
+        p = cs.SX.sym('p', 7 + len(regions))
+
+        z_start = p[:2]
+        z_goal = p[2:4]
+        z_ = cs.vertcat(z_start, z, z_goal)
+        max_ratio, max_alpha, enlargement = p[4], p[5], p[6]
+        weights = p[7:]
+
+        params = {
+            'maxratio': max_ratio,
+            'maxalpha': max_alpha,
+            'enlargement': enlargement
+        }
+        self.problem.params.update(params)
+
+        for i, region in enumerate(regions):
+            self.problem.set_weight(region, weights[i])
+    
+        ### Define cost function. See problem.py for details
+        ### cost = distance + penalty from each region
+        cost = self.problem.get_cost(z_) 
+    
+        ### Define constraints. See problem.py for details
+        ###       |Δx_i|/r_max ≤ |Δx_{i+1}| ≤ |Δx_i|*r_max
+        ###       angle(Δx_i,Δx_{i+1}) ≤ α_max
+        ###       [h(x)]_+ = 0
+        g = self.problem.get_nonlincon(z_)
+        set_c = og.constraints.Zero()
+        # set_y = og.constraints.BallInf(None, 1e12)
+
+        problem = og.builder.Problem(z, p, cost)\
+            .with_aug_lagrangian_constraints(g, set_c)
+    
+        build_config = self.opts['build_config']
+        meta = self.opts['meta']
+        
+        solver_config = self.opts['solver_config']
+        
+        builder = og.builder.OpEnOptimizerBuilder(problem, meta, build_config, solver_config)
+        builder.build()
 
     def create_x_init(self, displacement=0):
         N = self.problem.N
@@ -191,19 +155,6 @@ class Solver:
         
         traj = np.vstack((x0, x_reshaped, xf))
         ax.plot(traj[:, 0], traj[:, 1], *args, **kwargs)
-
-    # def plot_trajectory3D(self, x, *args, **kwargs):
-    #     import matplotlib.pyplot as plt
-    #     from mpl_toolkits.mplot3d import Axes3D
-    #     N = len(x) // 2
-    #     x0 = self.problem.map.x_start
-    #     xf = self.problem.map.x_goal
-    #     traj = np.vstack((x0, x.reshape(-1, 2), xf))
-    #     f = self.problem.get_total_penalty_function()
-    #     z = np.array([f(traj[j]) for j in range(N+2)])
-    #     fig = plt.figure()
-    #     ax = fig.add_subplot(111, projection='3d')
-    #     ax.plot(traj[:, 0], traj[:, 1], z+0.1, *args, **kwargs)
 
     def plot(self, color, ax=None):
         if ax is None:

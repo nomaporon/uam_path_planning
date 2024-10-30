@@ -14,9 +14,11 @@ class Problem:
             'penalty_smooth': True,
             'obstacle_smooth': False,
             'maxratio_smooth': False,
-            'maxratio': 1.1,
-            'maxalpha': np.pi/8,
-            'enlargement': 0
+        }
+        self.params = {
+            'maxratio': None,
+            'maxalpha': None,
+            'enlargement': None    
         }
         if opts:
             self.options.update(opts)
@@ -65,7 +67,7 @@ class Problem:
             smooth = self.options['penalty_smooth']
             w = self.weights[region_name]
 
-        enlargement = self.options['enlargement']
+        enlargement = self.params['enlargement']
 
         def penalty(x):
             total = 0
@@ -80,12 +82,12 @@ class Problem:
         return penalty
 
     def get_nonlincon(self, z):
-        self.check_options()
         constraints = []
         options_ = self.options
+        params_ = self.params
         maxratio_smooth = options_['maxratio_smooth']
-        maxratio = options_['maxratio']
-        maxalpha = options_['maxalpha']
+        maxratio = params_['maxratio']
+        maxalpha = params_['maxalpha']
 
         N_ = self.N
 
@@ -104,10 +106,6 @@ class Problem:
             cos_theta = cs.dot(zk, zk1) / (nrm(zk) * nrm(zk1))
             constraints.append(cs.fmax(0.0, mincos - cos_theta))
         return cs.vertcat(*constraints)
-
-    def check_options(self):
-        assert self.options['maxratio'] >= 1
-        assert 0 <= self.options['maxalpha'] <= np.pi
 
     # def feasibility_of(self, x: np.ndarray) -> Tuple[float, float]:
     #     if x.shape[0] == 2:

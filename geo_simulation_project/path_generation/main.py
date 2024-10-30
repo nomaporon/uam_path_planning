@@ -6,6 +6,7 @@ from polygon import polygon
 from ball import ball
 import matplotlib.pyplot as plt
 import utils as ut
+import opengen as og
 
 class Main:
     def __init__(self):
@@ -15,6 +16,8 @@ class Main:
 
     def setup_map(self):
         self.map = RegionMap()
+        # if you change map info, also change map_version to apply the changes
+        self.map.map_version = 'v1'
 
         # Obstacle
         # obs_ball1 = polygon.create_ball([2, -2], 1)
@@ -40,7 +43,7 @@ class Main:
         self.map.x_goal = np.array([26.478673, 9.564082])
 
     def setup_problem(self):
-        N = 20  # 軌道上の点の数
+        N = 25  # 軌道上の点の数
         opts = {
             'length_smooth': True,
             'penalty_smooth': True,
@@ -55,7 +58,30 @@ class Main:
         self.problem.set_weight('Population', 13)
         self.problem.set_weight('HistCenter', 45)
 
-    def solve(self, x_init):
+    def setup_solver_options(self):
+        build_config = og.config.BuildConfiguration()\
+            .with_build_directory("python_build")\
+            .with_tcp_interface_config()
+        
+        optimizer_name = "map_" + self.map.map_version + "_n" + str(self.problem.N)
+        meta = og.config.OptimizerMeta()\
+            .with_optimizer_name(optimizer_name)
+        
+        solver_config = og.config.SolverConfiguration()\
+            .with_tolerance(1e-4)\
+            .with_initial_tolerance(1e-3)\
+            .with_max_inner_iterations(1000)
+        
+        opts = {'build_config': build_config, 'meta': meta, 'solver_config': solver_config}
+        self.solver = Solver(self.problem, opts)
+        # solver will be updated automatically if map info and points are changed
+        # if you set update_solver to True, solver will be updated
+        # if you change build_config etc., set this to True to update the solver
+        # self.solver.update_solver = True
+        self.solver.update_solver = False
+        self.solver.optimizer_name = optimizer_name
+
+    def get_solver_result(self, x_init):
         result = self.solver.solve(x_init)
         return result
 
@@ -65,19 +91,20 @@ class Main:
         plt.axis('equal')
         plt.xlim(10, 50)
         plt.ylim(-40, 15)
-        # plt.show()
 
     def run(self):
         self.setup_map()
         self.setup_problem()
-        self.solver = Solver(self.problem)
+        self.setup_solver_options()
+
+        # displacements = [0]
         displacements = np.arange(-1, 2) / 2 # [-0.5, 0, 0.5]
         # displacements = np.arange(-2, 3) / 4 # [-0.5, -0.25, 0, 0.25, 0.5]
-        # displacements = [0]
         colors = ['b', 'r', 'k', 'm', 'g', 'y']
         for i in range(len(displacements)):
+            if i != 0: self.solver.update_solver = False 
             x_init = self.solver.create_x_init(displacements[i])
-            result = self.solve(x_init)
+            result = self.get_solver_result(x_init)
             print(result)
             self.plot_results(result, colors[i])
         plt.show()

@@ -6,12 +6,15 @@ from problem import Problem
 import matplotlib.pyplot as plt
 
 class Solver:
-    def __init__(self, problem: Problem):
+    def __init__(self, problem: Problem, opts: Dict):
         assert isinstance(problem, Problem)
         self.problem = problem
         self.x_sol = None
         self.x_init = None
+        self.opts = opts
         self.verbose = True
+        self.optimizer_name = None
+        self.update_solver = False
 
     def solve(self, x_init):
         self.x_init = x_init
@@ -19,11 +22,14 @@ class Solver:
         route_endpoints = np.array([x0, xf]).flatten()
 
         try:
-            solver = og.tcp.OptimizerTcpManager('python_build/map_v1_n20')
+            if self.update_solver:
+                print("Build New Solver")
+                self.build_solver()
+            solver = og.tcp.OptimizerTcpManager('python_build/' + self.optimizer_name)
         except:
             print("Build New Solver")
             self.build_solver()
-            solver = og.tcp.OptimizerTcpManager('python_build/map_v1_n20')
+            solver = og.tcp.OptimizerTcpManager('python_build/' + self.optimizer_name)
         
         try:
             solver.start()
@@ -68,22 +74,14 @@ class Solver:
         #       [h(x)]_+ = 0
         g = self.problem.get_nonlincon(z_)
     
-        # Create OpEn problem
         problem = og.builder.Problem(z, end_points, cost)\
             .with_penalty_constraints(g)\
             # .with_aug_lagrangian_constraints(g)\
     
-        # Configure solver
-        build_config = og.config.BuildConfiguration()\
-            .with_build_directory("python_build")\
-            .with_tcp_interface_config()
-        meta = og.config.OptimizerMeta()\
-            .with_optimizer_name("map_v1_n20")
+        build_config = self.opts['build_config']
+        meta = self.opts['meta']
         
-        solver_config = og.config.SolverConfiguration()\
-            .with_tolerance(1e-4)\
-            .with_initial_tolerance(1e-3)\
-            .with_max_inner_iterations(1000)
+        solver_config = self.opts['solver_config']
         
         # Build optimizer
         builder = og.builder.OpEnOptimizerBuilder(problem, meta, build_config, solver_config)

@@ -20,8 +20,14 @@ class Main:
         self.map.map_version = 'v1'
 
         ### No-fly zone
-        # obs_ball1 = ball([2, -2], 1)
-        # self.map.add_obstacle(obs_ball1)
+        air_port = ball([38.66652661075855, -9.203164091309498], 9)
+        defense_base1 = ball([46.36137256675563, 3.9427562315386298], 2)
+        defense_base2 = ball([19.846825121034392, 18.93411773399299], 2)
+        defense_base3 = ball([26.037433469490207, 15.46710452712196], 2)
+        heli_port = ball([46.87758543585609, -19.138710035318375], 2)
+        self.map.add_obstacles(air_port, defense_base1, defense_base2, defense_base3, heli_port)
+        # obstacle = ut.get_var_from_file('../../data/processed/no_fly_area.txt', 'vertices')
+        # self.map.add_obstacles(*obstacle)
 
         ### Land
         self.map.new_region('Land', [0.9290, 0.6940, 0.1250])
@@ -39,14 +45,14 @@ class Main:
         self.map.add_shape_to_region('HistCenter', hist_center)
 
     def setup_problem(self):
-        N = 40  # Number of waypoints
+        N = 30  # Number of waypoints
         ### if you change some of 'length_smooth', 'penalty_smooth', 'obstacle_smooth', 'maxratio_smooth',
         ### you need to update the solver(at setup_solver_options(), set self.solver.update_solver = True)
         ### you don't need to update the solver if you change maxratio, maxalpha, enlargement, weight of each region
         opts = {
             'length_smooth': True,
             'penalty_smooth': True,
-            'obstacle_smooth': False,
+            'obstacle_smooth': True,
             'maxratio_smooth': False,
         }
         self.problem = Problem(self.map, N, opts)
@@ -63,7 +69,7 @@ class Main:
         solver_config = og.config.SolverConfiguration()\
             .with_tolerance(1e-4)\
             .with_initial_tolerance(1e-3)\
-            .with_max_inner_iterations(1000)
+            .with_max_inner_iterations(1000000)
         
         opts = {'build_config': build_config, 'meta': meta, 'solver_config': solver_config}
         self.solver = Solver(self.problem, opts)
@@ -95,16 +101,18 @@ class Main:
         ### Set start and goal points
         x_start, x_goal =  [35.590685, -27.711422], [26.478673, 9.564082]
         self.map.x_start, self.map.x_goal = x_start, x_goal
-        maxratio, maxalpha, enlargement = 1.1, np.pi/20, 0
+        # maxratio, maxalpha, enlargement = 1.1, np.pi/60, 0 # N=50
+        maxratio, maxalpha, enlargement = 1.1, np.pi/20, 0 # N=40
+        # maxratio, maxalpha, enlargement = 1.1, np.pi/8, 0
         self.check_options(maxratio, maxalpha)
-        weights = [2, 26, 45] # according to the order of regions in setup_map()
+        weights = [0.1, 26, 45] # according to the order of regions in setup_map()
 
         params = (x_start + x_goal + [maxratio, maxalpha, enlargement] + weights)
 
         ### solver will be updated automatically if map info and points are changed
         ### if you set update_solver to True, solver will be updated
         ### if you change build_config etc., set this to True to update the solver
-        # self.solver.update_solver = True
+        self.solver.update_solver = True
         self.solver.update_solver = False
 
         # displacements = [0]

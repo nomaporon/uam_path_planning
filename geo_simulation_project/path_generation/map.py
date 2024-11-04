@@ -79,7 +79,7 @@ class Map:
         ax.plot(self.x_goal[0], self.x_goal[1], 'r*')
         for obs in self.obstacles:
             if hasattr(obs, 'plot'):
-                obs.plot(*args, ax=ax, **kwargs)
+                obs.plot(color='Black', alpha=0.1)
             else:
                 print(f"Warning: Obstacle of type {type(obs)} does not have a plot method.")
         

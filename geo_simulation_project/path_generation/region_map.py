@@ -85,7 +85,6 @@ class RegionMap(Map):
         """Plot the map with regions."""
         if ax is None:
             ax = plt.gca()
-        # super().plot(*args, ax=ax, **kwargs)
         for name, region in self.regions.items():
             # print(region['shapes'])
             color = region['color']
@@ -96,6 +95,7 @@ class RegionMap(Map):
             color = region['color']
             legend_elements.append(plt.Line2D([0], [0], marker='o', color='w', label=name,
                                               markerfacecolor=color, markersize=10))
+        super().plot(*args, ax=ax, **kwargs)
         ax.legend(handles=legend_elements)
         ax.autoscale_view()
 

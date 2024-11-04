@@ -105,6 +105,12 @@ class Problem:
             
             cos_theta = cs.dot(zk, zk1) / (nrm(zk) * nrm(zk1))
             constraints.append(cs.fmax(0.0, mincos - cos_theta))
+
+        for obs in self.map.obstacles:
+            psi = obs.penalty_function(options_['obstacle_smooth'])
+            for j in range(self.N + 2):
+                constraints.append(psi(z[2*j:2*(j+1)]))
+
         return cs.vertcat(*constraints)
 
     # def feasibility_of(self, x: np.ndarray) -> Tuple[float, float]:

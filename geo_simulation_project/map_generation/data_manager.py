@@ -52,6 +52,8 @@ class DataManager:
     #             f.seek(f.tell() - 2, 0)
     #             f.write(");\n" + f'map.add_shape_to_region({polygon_type}, poly)\n')
 
+
+    ### Pythonでそのまま読み込める形式で保存
     def save_polygons(self, polygons ,output_file):
         with open(output_file, 'w') as f:
             if isinstance(polygons, list):

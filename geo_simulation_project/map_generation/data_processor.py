@@ -3,7 +3,7 @@ from shapely.geometry import Polygon, MultiPolygon, LineString, box
 from shapely.ops import unary_union
 import cv2
 import matplotlib.pyplot as plt
-from map_generation.visualizer import Visualizer
+from visualizer import Visualizer
 
 class DataProcessor:
     def __init__(self, min_area=750000, large_area=32000000, divisions=5, min_approx_polygon_area=780000):

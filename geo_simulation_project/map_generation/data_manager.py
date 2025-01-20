@@ -52,7 +52,6 @@ class DataManager:
     #             f.seek(f.tell() - 2, 0)
     #             f.write(");\n" + f'map.add_shape_to_region({polygon_type}, poly)\n')
 
-
     ### Pythonでそのまま読み込める形式で保存
     def save_polygons(self, polygons ,output_file):
         with open(output_file, 'w') as f:
@@ -80,3 +79,14 @@ class DataManager:
                     f.write("[" + str(coord[0]/1000) + ", " + str(coord[1]/1000) + "], ")
                 f.seek(f.tell() - 2, 0)
                 f.write("]\n")
+
+    def save_polygons_to_shapefile(self, polygons, output_file):
+        gdf = gpd.GeoDataFrame(geometry=polygons,crs='EPSG:2443')
+        gdf = gdf.to_crs('EPSG:4612')
+        gdf.to_file(output_file)
+
+if __name__ == '__main__':
+    with open('../../data/raw/selected_polygons.txt', 'r') as f:
+        polygons = [wkt.loads(line.strip()) for line in f]
+    dm = DataManager()
+    dm.save_polygons_to_shapefile(polygons, '../../data/processed/land/land_area.shp')

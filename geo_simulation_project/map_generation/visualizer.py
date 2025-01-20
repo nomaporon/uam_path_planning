@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import patches
-from map_generation.utils import generate_random_colors
+from utils import generate_random_colors
 from geopandas import GeoSeries
 
 class Visualizer:

@@ -1,6 +1,7 @@
-from map_generation.data_manager import DataManager
-from map_generation.data_processor import DataProcessor
-from map_generation.visualizer import Visualizer
+from data_manager import DataManager
+from data_processor import DataProcessor
+from visualizer import Visualizer
+import utils as ut
 from shapely import wkt
 
 class Main:
@@ -10,19 +11,20 @@ class Main:
         self.visualizer = Visualizer()
 
     def main(self):
-        # self.process_population() # 人口密集地データの処理
+        self.process_population() # 人口密集地データの処理
         # self.process_land() # 標高データの処理
-        self.process_select_polygons() # 選択したポリゴンデータの処理
+        # self.process_select_polygons() # 選択したポリゴンデータの処理
         # self.visualize_map() # マップの可視化
 
     # # # 人口密集地データの処理
     def process_population(self):
         # # # 元データの読み込み
-        polygons = self.data_manager.load_polygons_from_shapefile('../data/raw/populated_area/populated_area.shp')
+        polygons = self.data_manager.load_polygons_from_shapefile('../../data/raw/populated_area/populated_area.shp')
         # # # ポリゴンデータの近似処理
         processed_polygons = self.processor.process_polygons(polygons)
         # # # 処理後のポリゴンデータをシミュレーション用に保存
-        self.data_manager.save_polygons(processed_polygons, '../data/processed/populated_area.txt')
+        self.data_manager.save_polygons(processed_polygons, '../../data/processed/populated_area.txt')
+        ut.make_area_shp(processed_polygons)
         # # # プロットの表示
         # self.visualizer.plot_polygons(polygons)
         # self.visualizer.plot_polygons(processed_polygons)

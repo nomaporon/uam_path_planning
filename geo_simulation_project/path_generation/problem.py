@@ -36,11 +36,11 @@ class Problem:
     # cost = distance + penalty from each region
     # cost = Σ_i(|Δz_i| + psi_region1(z_i) + psi_region2(z_i) + ...)
     def get_cost(self, z):
-        path_length = self.length_of(z, self.options['length_smooth']) / self.N
+        path_length = self.length_of(z, self.options['length_smooth'])
         penalty = self.get_total_penalty_function()
-        cost = path_length
+        cost = (self.N + 1) * path_length
         for j in range(self.N + 2):
-            cost += penalty(z[2*j:2*(j+1)])
+            cost += penalty(z[2*j:2*(j+1)]) / self.N
         return cost
     
     # get penalty function of each region
@@ -77,7 +77,7 @@ class Problem:
                     total += psi(x)
                 else:
                     total += (psi(x) / psi(obs.center))
-            return w * total / self.N
+            return w * total
 
         return penalty
 
@@ -129,7 +129,7 @@ class Problem:
     # x = [z1[0], z1[1], z2[0], z2[1], ..., zN-1[0], zN-1[1]]  2*N × 1
     def length_of(self, x, smooth=False):
         if smooth:
-            nrm = lambda y: cs.sumsqr(y)
+            nrm = lambda y: cs.norm_2(y)**2
         else:
             nrm = cs.norm_2
 

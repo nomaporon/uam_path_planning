@@ -42,10 +42,10 @@ class Solver:
             self.x_sol = solution.solution
             out = {
                 'x': self.x_sol,
-                'N': self.problem.N,
-                'x0': x_init,
+                # 'N': self.problem.N,
+                # 'x0': x_init,
                 'time': solution.solve_time_ms / 1000,
-                'fval': solution.cost,
+                'fval': cs.sqrt(solution.cost),
                 'length': self.problem.length_of(self.x_sol),
                 'exit_status': solution.exit_status
             }
